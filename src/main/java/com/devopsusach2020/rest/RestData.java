@@ -34,7 +34,7 @@ public class RestData {
 	}
 
 	public @ResponseBody Pais getTotalPais(@RequestParam(name = "pais") String message) {
-        RestTemplate restTemplate = new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate(); 
         ResponseEntity<String> call = restTemplate.getForEntity("https://api.covid19api.com/live/country" + message, String.class);
         
         LOGGER.log(Level.INFO, "Consultar por pais");
