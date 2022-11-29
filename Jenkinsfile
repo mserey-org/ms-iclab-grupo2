@@ -32,6 +32,22 @@ pipeline {
                 }
             }
         }
+        stage("Paso 4: Análisis SonarQube"){
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh "echo 'Calling sonar Service in another docker container!'"
+                    // Run Maven on a Unix agent to execute Sonar.
+                    sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=ms-iclab-grupo2 -Dsonar.projectName=ms-iclab-grupo2 -Dsonar.java.binaries=build'
+                }
+            }
+            post {
+                //record the test results and archive the jar file.
+                 success {
+                    sh "echo 'Analisis exitoso'"
+                     //archiveArtifacts artifacts:'build/*.jar'
+                 }
+            }
+        }
     }
     post {
         always {
