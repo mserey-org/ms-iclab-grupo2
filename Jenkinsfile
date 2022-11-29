@@ -7,8 +7,9 @@ def jsonParse(def json) {
 pipeline {
     agent any
     stages {
-        if (env.BRANCHNAME =~ ".*release/.*") { 
-            stage("Paso 1: Compliar"){                
+        
+            stage("Paso 1: Compliar"){   
+                if (env.BRANCHNAME =~ ".*release/.*") {              
                 steps {
                     script {
                     sh "echo $env.BRANCH_NAME"
@@ -16,6 +17,7 @@ pipeline {
                     // Run Maven on a Unix agent.
                     sh "./mvnw clean compile -e"
                     }
+                }
                 }
             }
             stage("Paso 2: Testear"){
@@ -64,7 +66,7 @@ pipeline {
                     }
                 }
             }
-        }      
+            
     }
     post {
         always {
