@@ -13,7 +13,7 @@ pipeline {
     stages {
         
         stage("Paso 0: Download Code and checkout"){
-            when { branch 'feature/*' }
+            { branch pattern: "release-\\d+", comparator: "REGEXP"}
             steps {
                 script{
                     env.STAGE='Paso 0: Download Code and checkout'
