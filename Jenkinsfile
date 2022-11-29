@@ -36,6 +36,7 @@ pipeline {
     }
      
         stage("Paso 1: Build && Test"){
+             when { branch 'feature/*' }
             steps {
                 script{
                     sh "echo 'Build && Test!'"
