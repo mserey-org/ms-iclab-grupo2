@@ -13,7 +13,7 @@ pipeline {
 
             stage("Paso 1: Compliar"){    
                 when {
-                expression { BRANCH_NAME == '/(release/*|feature/*)/'}}            
+                expression { (env.BRANCH_NAME =~ ".*release/.*" || env.BRANCH_NAME =~ ".*feature/.*")}}            
                 steps {
                     script {
                     sh "echo $env.BRANCH_NAME"
