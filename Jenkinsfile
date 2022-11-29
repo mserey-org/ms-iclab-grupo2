@@ -9,7 +9,7 @@ pipeline {
 
             stage("Paso 1: Compliar"){    
                 when {
-                expression { BRANCH_NAME ==~ '/(release/*|feature/*)/'}            
+                expression { BRANCH_NAME ==~ '/(release/*|feature/*)/'}}            
                 steps {
                     script {
                     sh "echo $env.BRANCH_NAME"
@@ -18,6 +18,7 @@ pipeline {
                     sh "./mvnw clean compile -e"
                     }
                 }
+                
             }
             stage("Paso 2: Testear"){
                 steps {
