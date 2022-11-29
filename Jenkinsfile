@@ -26,10 +26,10 @@ pipeline {
             }
             post{
 				success{
-					slackSend color: 'good', channel: "${env.channel}", message: "[${GROUP}][${env.JOB_NAME}][Pipeline IC/CD][Rama:${env.BRANCH_NAME}][Stage:${STAGE}][Resultado:Éxito/Success]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-status-channel'
+					slackSend color: 'good', channel: "${env.channel}", message: "[${GROUP}][${JOB_NAME}][Pipeline IC/CD][Rama:${BRANCH_NAME}][Stage:${STAGE}][Resultado:Éxito/Success]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-status-channel'
 				}
 				failure{
-					slackSend color: 'danger',channel: "${env.channel}", message: "[${GROUP}][${env.JOB_NAME}][Pipeline IC/CD][Rama:${env.BRANCH_NAME}][Stage:${STAGE}][Resultado:Error/Fail]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-status-channel'
+					slackSend color: 'danger',channel: "${env.channel}", message: "[${GROUP}][${JOB_NAME}][Pipeline IC/CD][Rama:${BRANCH_NAME}][Stage:${STAGE}][Resultado:Error/Fail]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-status-channel'
 				}
         }
     }
