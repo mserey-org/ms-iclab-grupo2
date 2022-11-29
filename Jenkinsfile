@@ -7,7 +7,7 @@ def jsonParse(def json) {
 pipeline {
     agent any
     stages {
-        if(env.BRANCH_NAME == 'feature'){    
+        if (env.BRANCHNAME =~ ".*release/.*") { 
             stage("Paso 1: Compliar"){                
                 steps {
                     script {
