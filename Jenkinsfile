@@ -4,12 +4,16 @@ def jsonParse(def json) {
 }
 pipeline {
     agent any
+    environment {
+        //NEXUS_USER       = credentials('nexus-user')
+        NEXUS_PASSWORD     = credentials('nexus-password')
+    }
     stages {
         //if(env.BRANCH_NAME == 'master'){
 
             stage("Paso 1: Compliar"){    
                 when {
-                expression { BRANCH_NAME ==~ '/(release/*|feature/*)/'}}            
+                expression { BRANCH_NAME == '/(release/*|feature/*)/'}}            
                 steps {
                     script {
                     sh "echo $env.BRANCH_NAME"
