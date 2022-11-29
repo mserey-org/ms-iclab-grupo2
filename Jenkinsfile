@@ -1,15 +1,12 @@
 import groovy.json.JsonSlurperClassic
 def jsonParse(def json) {
     new groovy.json.JsonSlurperClassic().parseText(json)
-
-    
 }
 pipeline {
     agent any
     stages {
-        
-            stage("Paso 1: Compliar"){   
-                if (env.BRANCHNAME =~ ".*release/.*") {              
+        if(env.BRANCH_NAME == 'master'){
+            stage("Paso 1: Compliar"){                
                 steps {
                     script {
                     sh "echo $env.BRANCH_NAME"
@@ -17,7 +14,6 @@ pipeline {
                     // Run Maven on a Unix agent.
                     sh "./mvnw clean compile -e"
                     }
-                }
                 }
             }
             stage("Paso 2: Testear"){
@@ -66,7 +62,7 @@ pipeline {
                     }
                 }
             }
-            
+        }      
     }
     post {
         always {
