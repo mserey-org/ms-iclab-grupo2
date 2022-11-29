@@ -13,7 +13,9 @@ pipeline {
     stages {
         
         stage("Paso 0: Download Code and checkout"){
-            { branch pattern: "feature-\\d+", comparator: "REGEXP"}
+              when { 
+            expression { BRANCH_NAME ==~ /feature\/[0-9]+\.[0-9]+\.[0-9]+/ }
+        }
             steps {
                 script{
                     env.STAGE='Paso 0: Download Code and checkout'
