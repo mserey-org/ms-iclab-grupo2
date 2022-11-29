@@ -5,8 +5,11 @@ def jsonParse(def json) {
 pipeline {
     agent any
     stages {
-        if(env.BRANCH_NAME == 'master'){
-            stage("Paso 1: Compliar"){                
+        //if(env.BRANCH_NAME == 'master'){
+
+            stage("Paso 1: Compliar"){    
+                when {
+                expression { BRANCH_NAME ==~ '/(release/*|feature/*)/'}            
                 steps {
                     script {
                     sh "echo $env.BRANCH_NAME"
@@ -62,7 +65,7 @@ pipeline {
                     }
                 }
             }
-        }      
+        //}      
     }
     post {
         always {
