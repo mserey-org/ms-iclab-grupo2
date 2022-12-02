@@ -9,7 +9,7 @@ stage("Intro"){
 if (env.BRANCH_NAME =~ ".*release/.*" || env.BRANCH_NAME =~ ".*feature/.*") {
     stage("Paso 1: Compliar"){
         node {
-            sh "echo 'Compile Code! oriverhu'"
+            sh "echo 'Compile Code!"
             sh "./mvnw clean compile -e"
         }
     }
@@ -27,6 +27,7 @@ if (env.BRANCH_NAME =~ ".*release/.*" || env.BRANCH_NAME =~ ".*feature/.*") {
             try {
                 script {
                 sh "echo 'Build .Jar!'"
+                sh "echo currentBuild.result=$currentBuild.result"
                 // Run Maven on a Unix agent.
                 sh "./mvnw  clean package -e"
                 }
@@ -50,10 +51,32 @@ if (env.BRANCH_NAME =~ ".*release/.*" || env.BRANCH_NAME =~ ".*feature/.*") {
                 sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=ms-iclab-grupo2 -Dsonar.projectName=ms-iclab-grupo2 -Dsonar.java.binaries=build'
             }
         }
-    } 
+    }
+    stage("Paso 5: Merge"){
+        node {
+            try {
+                sh "echo 'git flow $branch_type finish'"
+                sh "echo 'Merge exitoso'"
+            }catch (e) {
+                echo 'merge fallido'
+                throw e
+            }
+            finally {
+                
+            } 
+           
+        }
+    }
 }
 
-
+// stage("Paso 3: Curl Springboot maven sleep 20"){
+//             steps {
+//                 script{
+//                     sh "nohup bash ./mvnw spring-boot:run  & >/dev/null"
+//                     sh "sleep 20 && curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
+//                 }
+//             }
+//         }
 if (env.BRANCH_NAME =~ ".*main" || env.BRANCH_NAME =~  ".*develop") {
     stage("CD"){
         node {
