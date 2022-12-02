@@ -27,7 +27,7 @@ if (env.BRANCH_NAME =~ ".*release/.*" || env.BRANCH_NAME =~ ".*feature/.*") {
             try {
                 script {
                 sh "echo 'Build .Jar!'"
-                sh "echo 'currentBuild.result=$currentBuild.result'"
+                //sh "echo 'currentBuild.result=$currentBuild.result'"
                 // Run Maven on a Unix agent.
                 sh "./mvnw  clean package -e"
                 }
