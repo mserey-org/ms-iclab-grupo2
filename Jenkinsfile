@@ -52,21 +52,21 @@ if (env.BRANCH_NAME =~ ".*release/.*" || env.BRANCH_NAME =~ ".*feature/.*") {
             }
         }
     }
-    stage("Paso 5: Merge"){
-        node {
-            try {
-                sh "echo 'git flow $branch_type finish'"
-                sh "echo 'Merge exitoso'"
-            }catch (e) {
-                echo 'merge fallido'
-                throw e
-            }
-            finally {
+    // stage("Paso 5: Merge"){
+    //     node {
+    //         try {
+    //             sh "echo 'git flow $branch_type finish'"
+    //             sh "echo 'Merge exitoso'"
+    //         }catch (e) {
+    //             echo 'merge fallido'
+    //             throw e
+    //         }
+    //         finally {
                 
-            } 
+    //         } 
            
-        }
-    }
+    //     }
+    // }
 }
 
 // stage("Paso 3: Curl Springboot maven sleep 20"){
