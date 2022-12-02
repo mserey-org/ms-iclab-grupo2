@@ -1,5 +1,5 @@
 #!groovy​
-withEnv(['channel=D044QHWTS23','DB_ENGINE=sqlite']) {
+withEnv(['channel=C04B17VE0JH','DB_ENGINE=sqlite']) {
     stage("Intro"){
             node {
                 sh "echo 'Hola'"
