@@ -49,7 +49,7 @@ withEnv(['channel=D044QHWTS23','DB_ENGINE=sqlite']) {
             }
             stage("Paso 5: Merge"){
                 node {
-                    slackSend color: 'good', channel: "${env.channel}", message: "[grupo2] [${env.JOB_NAME}] [${BUILD_TAG}] Se finaliza [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'token-slack'
+                    slackSend (color: 'good', channel: "${env.channel}", message: "[grupo2] [${env.JOB_NAME}] [${BUILD_TAG}] Se finaliza [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'token-slack')
                 }
             }
 
@@ -117,7 +117,7 @@ withEnv(['channel=D044QHWTS23','DB_ENGINE=sqlite']) {
 
     catch (e) {
             echo 'This will run only if failed'
-            slackSend color: 'danger', channel: "${env.channel}", message: "[grupo2] [${env.JOB_NAME}] [${BUILD_TAG}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'token-slack'
+            slackSend (color: 'danger', channel: "${env.channel}", message: "[grupo2] [${env.JOB_NAME}] [${BUILD_TAG}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'token-slack')
             throw e
 
     }
