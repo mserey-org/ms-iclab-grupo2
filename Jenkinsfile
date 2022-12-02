@@ -52,31 +52,10 @@ if (env.BRANCH_NAME =~ ".*release/.*" || env.BRANCH_NAME =~ ".*feature/.*") {
             }
         }
     }
-    // stage("Paso 5: Merge"){
-    //     node {
-    //         try {
-    //             sh "echo 'git flow $branch_type finish'"
-    //             sh "echo 'Merge exitoso'"
-    //         }catch (e) {
-    //             echo 'merge fallido'
-    //             throw e
-    //         }
-    //         finally {
-                
-    //         } 
-           
-    //     }
-    // }
+
 }
 
-// stage("Paso 3: Curl Springboot maven sleep 20"){
-//             steps {
-//                 script{
-//                     sh "nohup bash ./mvnw spring-boot:run  & >/dev/null"
-//                     sh "sleep 20 && curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
-//                 }
-//             }
-//         }
+
 if (env.BRANCH_NAME =~ ".*main" || env.BRANCH_NAME =~  ".*develop") {
     stage("CD"){
         node {
