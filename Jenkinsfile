@@ -71,7 +71,7 @@ withEnv(['channel=C04B17VE0JH']) {
             stage("CD 1: Subir Artefacto a Nexus"){
                     env.STAGE='CD 1: Subir Artefacto a Nexus'
                     node {
-                        nexusPublisher nexusInstanceId: 'nexus',
+                        nexusPublisher(nexusInstanceId: 'nexus',
                             nexusRepositoryId: 'repository_grupo2',
                             packages: [
                                 [$class: 'MavenPackage',
@@ -88,7 +88,7 @@ withEnv(['channel=C04B17VE0JH']) {
                                         version: "$VERSION"
                                     ]
                                 ]
-                            ]                
+                            ])                
                     }
                 }
                 stage("CD 2: Descargar Nexus"){
