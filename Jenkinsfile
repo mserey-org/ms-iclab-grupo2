@@ -45,15 +45,14 @@ withEnv(['channel=C04B17VE0JH','DB_ENGINE=sqlite']) {
             if (env.BRANCH_NAME =~ ".*feature/.*") {
                 stage("Paso 5: Merge"){
                     node {
-                        sh "echo 'test $env.BRANCH_NAME'"
-                        sh "echo 'test2 ${$env.BRANCH_NAME}'"
+                        sh "'git flow finish feature $env.BRANCH_NAME'"
                     }
                 }
             }
             if (env.BRANCH_NAME =~ ".*release/.*") {
                 stage("Paso 5: Merge"){
                     node {
-                        sh "echo 'test $env.BRANCH_NAME'"
+                        sh "'git flow finish release $env.BRANCH_NAME'"
                     }
                 }
             }
