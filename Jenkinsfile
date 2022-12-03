@@ -78,14 +78,14 @@ withEnv(['channel=C04B17VE0JH']) {
                                     mavenAssetList: [
                                         [classifier: '',
                                         extension: 'jar',
-                                        filePath: "build/DevOpsUsach2020-'$VERSION'.jar"
+                                        filePath: "build/DevOpsUsach2020-$VERSION.jar"
                                     ]
                                 ],
                                     mavenCoordinate: [
                                         artifactId: 'DevOpsUsach2020',
                                         groupId: 'com.devopsusach2020',
                                         packaging: 'jar',
-                                        version: "'$VERSION'"
+                                        version: "$VERSION"
                                     ]
                                 ]
                             ]                
@@ -94,13 +94,13 @@ withEnv(['channel=C04B17VE0JH']) {
                 stage("CD 2: Descargar Nexus"){
                     env.STAGE='CD 2: Descargar Nexus'
                     node {
-                            sh " curl -X GET -u admin:$NEXUS_PASSWORD 'http://nexus:8081/repository/repository_grupo2/com/devopsusach2020/DevOpsUsach2020/$VERSION/DevOpsUsach2020-'$VERSION'.jar' -O"
+                            sh " curl -X GET -u admin:$NEXUS_PASSWORD 'http://nexus:8081/repository/repository_grupo2/com/devopsusach2020/DevOpsUsach2020/$VERSION/DevOpsUsach2020-$VERSION.jar' -O"
                     }
                 }
                 stage("CD 3: Levantar Artefacto Jar en server Jenkins"){
                     env.STAGE='CD 3: Levantar Artefacto Jar en server Jenkins'
                     node {
-                            sh "nohup java -jar DevOpsUsach2020-'$VERSION'.jar & >/dev/null"                
+                            sh "nohup java -jar DevOpsUsach2020-$VERSION.jar & >/dev/null"                
                     }
                 }
                 stage("CD 4: Testear Artefacto - Dormir(Esperar 20sg) "){
