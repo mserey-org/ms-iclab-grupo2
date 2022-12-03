@@ -78,7 +78,7 @@ withEnv(['channel=C04B17VE0JH']) {
                                     mavenAssetList: [
                                         [classifier: '',
                                         extension: 'jar',
-                                        filePath: "build/DevOpsUsach2020-$VERSION'.jar'"
+                                        filePath: "'build/DevOpsUsach2020-$VERSION'.jar"
                                     ]
                                 ],
                                     mavenCoordinate: [
@@ -100,7 +100,7 @@ withEnv(['channel=C04B17VE0JH']) {
                 stage("CD 3: Levantar Artefacto Jar en server Jenkins"){
                     env.STAGE='CD 3: Levantar Artefacto Jar en server Jenkins'
                     node {
-                            sh "nohup java -jar DevOpsUsach2020-$VERSION'.jar & >/dev/null'"                
+                            sh "'nohup java -jar DevOpsUsach2020-$VERSION'.jar & >/dev/null"                
                     }
                 }
                 stage("CD 4: Testear Artefacto - Dormir(Esperar 20sg) "){
