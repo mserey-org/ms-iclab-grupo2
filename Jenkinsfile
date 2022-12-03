@@ -1,17 +1,23 @@
 #!groovy​
 withEnv(['channel=C04B17VE0JH']) {
-    stage("Inicio"){
-            env.STAGE='Inicio'
-            node {
-                sh "echo 'Se inicia Pipeline'"
-            }
-    }
 
     def BRANCH = "${env.BRANCH_NAME.split("/")[1]}"
     def BRANCH_TYPE = "${env.BRANCH_NAME.split("/")[0]}"
 
     try{
 
+            stage("Inicio"){
+                    env.STAGE='Inicio'
+                    node {
+                        sh "echo 'Se inicia Pipeline'"
+                        checkout(
+                                    [$class: 'GitSCM',
+                                    //Acá reemplazar por el nonbre de branch
+                                    branches: [[name: "$env.BRANCH_NAME" ]],
+                                    //Acá reemplazar por su propio repositorio
+                                    userRemoteConfigs: [[url: 'https://github.com/mserey-org/ms-iclab-grupo2.git']]])
+                    }
+            }
             stage("CI 1: Compliar"){
                 env.STAGE='CI 1: Compliar'
                 node {
