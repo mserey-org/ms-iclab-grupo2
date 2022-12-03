@@ -66,7 +66,7 @@ withEnv(['channel=C04B17VE0JH']) {
                 env.STAGE='CD'
                 node {
                     sh "echo 'Se inicia release $VERSION'"
-                    sh "echo 'build/DevOpsUsach2020-$VERSION.jar'"
+                    sh "echo 'build/DevOpsUsach2020-$VERSION'.jar"
                 }
             }  
             stage("CD 1: Subir Artefacto a Nexus"){
