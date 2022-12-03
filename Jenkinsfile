@@ -42,20 +42,15 @@ withEnv(['channel=C04B17VE0JH','DB_ENGINE=sqlite']) {
                     }
                 }
             } 
-            if (env.BRANCH_NAME =~ ".*feature/.*") {
-                stage("Paso 5: Merge"){
-                    node {
-                        sh "'git flow finish feature $env.BRANCH_NAME'"
-                    }
+            def BRANCH = "${env.BRANCH_NAME.split("/")[1]}"
+            def BRANCH_TYPE = "${env.BRANCH_NAME.split("/")[0]}"
+            
+            stage("Paso 5: Merge BRANCH_TYPE"){
+                node {
+                    sh "'git flow $BRANCH_TYPE finish $BRANCH'"
                 }
             }
-            if (env.BRANCH_NAME =~ ".*release/.*") {
-                stage("Paso 5: Merge"){
-                    node {
-                        sh "'git flow finish release $env.BRANCH_NAME'"
-                    }
-                }
-            }
+            
             stage("Paso 6: Mensaje slack"){
                 node {
                     slackSend (color: 'good', channel: "${env.channel}", message: "[grupo2] [${env.JOB_NAME}] [${BUILD_NUMBER}] Integracion Exitosa [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'token-slack')
