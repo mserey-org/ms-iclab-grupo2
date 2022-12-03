@@ -103,7 +103,8 @@ withEnv(['channel=C04B17VE0JH','NEXUS_PASSWORD = credentials("nexus-password")']
                     env.STAGE='CD 2: Descargar Nexus'                    
                     node {
                             //sh ' curl -X GET -u admin:$NEXUS_PASSWORD "http://nexus:8081/repository/repository_grupo2/com/devopsusach2020/DevOpsUsach2020/${VERSION}/DevOpsUsach2020-${VERSION}.jar" -O'
-                            sh "sleep 20 && curl -X GET -u admin:${env.NEXUS_PASSWORD} http://nexus:8081/repository/repository_grupo2/com/devopsusach2020/DevOpsUsach2020/${VERSION}/DevOpsUsach2020-${VERSION}.jar -O"
+                            //sh "sleep 20 && curl -X GET -u admin:${env.NEXUS_PASSWORD} http://nexus:8081/repository/repository_grupo2/com/devopsusach2020/DevOpsUsach2020/${VERSION}/DevOpsUsach2020-${VERSION}.jar -O"
+                            sh "sleep 20 && curl -X GET -u admin:admin123 http://nexus:8081/repository/repository_grupo2/com/devopsusach2020/DevOpsUsach2020/${VERSION}/DevOpsUsach2020-${VERSION}.jar -O"
                     }
                 }
                 stage("CD 3: Levantar Artefacto Jar en server Jenkins"){
