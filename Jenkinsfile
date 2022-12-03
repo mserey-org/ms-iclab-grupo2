@@ -1,8 +1,8 @@
 #!groovy​
-withEnv(['channel=C04B17VE0JH','DB_ENGINE=sqlite']) {
-    stage("Intro"){
+withEnv(['channel=C04B17VE0JH']) {
+    stage("Inicio"){
             node {
-                sh "echo 'Hola'"
+                sh "echo 'Se inicia Pipeline'"
             }
     }
 
@@ -13,7 +13,7 @@ withEnv(['channel=C04B17VE0JH','DB_ENGINE=sqlite']) {
 
             stage("CI 1: Compliar"){
                 node {
-                    sh "echo 'Compile Code! oriverhu'"
+                    sh "echo 'Compile Code!'"
                     sh "./mvnw clean compile -e"
                 }
             }
@@ -47,11 +47,11 @@ withEnv(['channel=C04B17VE0JH','DB_ENGINE=sqlite']) {
 
 
         if (env.BRANCH_NAME =~ ".*release/.*") {
-            
+            def VERSION = $BRANCH 
 
             stage("CD"){
                 node {
-                    sh "echo 'artefacto....'"
+                    sh "echo 'Se inicia release $VERSION'"
                 }
             }  
             stage("CD 1: Subir Artefacto a Nexus"){
@@ -63,14 +63,14 @@ withEnv(['channel=C04B17VE0JH','DB_ENGINE=sqlite']) {
                                     mavenAssetList: [
                                         [classifier: '',
                                         extension: 'jar',
-                                        filePath: 'build/DevOpsUsach2020-$BRANCH.jar'
+                                        filePath: 'build/DevOpsUsach2020-$VERSION.jar'
                                     ]
                                 ],
                                     mavenCoordinate: [
                                         artifactId: 'DevOpsUsach2020',
                                         groupId: 'com.devopsusach2020',
                                         packaging: 'jar',
-                                        version: '$BRANCH'
+                                        version: '$VERSION'
                                     ]
                                 ]
                             ]                
@@ -78,12 +78,12 @@ withEnv(['channel=C04B17VE0JH','DB_ENGINE=sqlite']) {
                 }
                 stage("CD 2: Descargar Nexus"){
                     node {
-                            sh ' curl -X GET -u admin:$NEXUS_PASSWORD "http://nexus:8081/repository/maven-usach-ceres/com/devopsusach2020/DevOpsUsach2020/$BRANCH/DevOpsUsach2020-$BRANCH.jar" -O'
+                            sh ' curl -X GET -u admin:$NEXUS_PASSWORD "http://nexus:8081/repository/repository_grupo2/com/devopsusach2020/DevOpsUsach2020/$VERSION/DevOpsUsach2020-$VERSION.jar" -O'
                     }
                 }
                 stage("CD 3: Levantar Artefacto Jar en server Jenkins"){
                     node {
-                            sh 'nohup java -jar DevOpsUsach2020-$BRANCH.jar & >/dev/null'                
+                            sh 'nohup java -jar DevOpsUsach2020-$VERSION.jar & >/dev/null'                
                     }
                 }
                 stage("CD 4: Testear Artefacto - Dormir(Esperar 20sg) "){
