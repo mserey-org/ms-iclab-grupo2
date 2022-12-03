@@ -46,9 +46,7 @@ withEnv(['channel=C04B17VE0JH','DB_ENGINE=sqlite']) {
             def BRANCH_TYPE = "${env.BRANCH_NAME.split("/")[0]}"
             
             stage("Paso 5: Merge $BRANCH_TYPE"){
-                node {
-                    sh "ls -la"
-                    sh "pwd"
+                node {                    
                     sh "'git flow $BRANCH_TYPE finish $BRANCH'"
                 }
             }
