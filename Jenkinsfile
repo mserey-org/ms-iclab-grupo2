@@ -1,8 +1,10 @@
 #!groovy​
-withEnv(['channel=C04B17VE0JH']) {
+withEnv(['channel=C04B17VE0JH','NEXUS_PASSWORD = credentials("nexus-password")']) {
 
     def BRANCH = "${env.BRANCH_NAME.split("/")[1]}"
     def BRANCH_TYPE = "${env.BRANCH_NAME.split("/")[0]}"
+    def VERSION = "${env.BRANCH_NAME.split("/")[1]}"
+    
 
     try{
 
@@ -23,6 +25,7 @@ withEnv(['channel=C04B17VE0JH']) {
                 node {
                     sh "echo 'Compile Code!'"
                     sh "./mvnw clean compile -e"
+                    
                 }
             }
             stage("CI 2: Testear"){
@@ -41,7 +44,14 @@ withEnv(['channel=C04B17VE0JH']) {
                     script {
                         sh "echo 'Build .Jar!'"
                         // Run Maven on a Unix agent.
-                        sh "./mvnw  clean package -e"
+                        if(env.BRANCH_NAME =~ ".*release/.*")
+                        {
+                            sh "./mvnw  clean package -e versions:set -DnewVersion=${VERSION}"
+                        }else
+                        {
+                            sh "./mvnw  clean package -e"
+                        }
+                        
                     }            
                 }
             }
@@ -58,53 +68,56 @@ withEnv(['channel=C04B17VE0JH']) {
 
 
         if (env.BRANCH_NAME =~ ".*release/.*") {
-            def VERSION = $BRANCH 
+             
 
             stage("CD"){
                 env.STAGE='CD'
                 node {
-                    sh "echo 'Se inicia release $VERSION'"
+                    sh "echo 'Se inicia release $VERSION'"                   
                 }
             }  
             stage("CD 1: Subir Artefacto a Nexus"){
                     env.STAGE='CD 1: Subir Artefacto a Nexus'
                     node {
-                        nexusPublisher nexusInstanceId: 'nexus',
+                        nexusPublisher(nexusInstanceId: 'nexus',
                             nexusRepositoryId: 'repository_grupo2',
                             packages: [
                                 [$class: 'MavenPackage',
                                     mavenAssetList: [
                                         [classifier: '',
                                         extension: 'jar',
-                                        filePath: 'build/DevOpsUsach2020-$VERSION.jar'
+                                        filePath: "build/DevOpsUsach2020-${VERSION}.jar"
                                     ]
                                 ],
                                     mavenCoordinate: [
                                         artifactId: 'DevOpsUsach2020',
                                         groupId: 'com.devopsusach2020',
                                         packaging: 'jar',
-                                        version: '$VERSION'
+                                        version: "${VERSION}"
                                     ]
                                 ]
-                            ]                
+                            ])                
                     }
                 }
                 stage("CD 2: Descargar Nexus"){
-                    env.STAGE='CD 2: Descargar Nexus'
+                    env.STAGE='CD 2: Descargar Nexus'                    
                     node {
-                            sh ' curl -X GET -u admin:$NEXUS_PASSWORD "http://nexus:8081/repository/repository_grupo2/com/devopsusach2020/DevOpsUsach2020/$VERSION/DevOpsUsach2020-$VERSION.jar" -O'
-                    }
+                            //sh ' curl -X GET -u admin:$NEXUS_PASSWORD "http://nexus:8081/repository/repository_grupo2/com/devopsusach2020/DevOpsUsach2020/${VERSION}/DevOpsUsach2020-${VERSION}.jar" -O'
+                            sh "sleep 20 && curl -X GET -u admin:${env.NEXUS_PASSWORD} http://nexus:8081/repository/repository_grupo2/com/devopsusach2020/DevOpsUsach2020/${VERSION}/DevOpsUsach2020-${VERSION}.jar -O"
+                        }
                 }
                 stage("CD 3: Levantar Artefacto Jar en server Jenkins"){
                     env.STAGE='CD 3: Levantar Artefacto Jar en server Jenkins'
                     node {
-                            sh 'nohup java -jar DevOpsUsach2020-$VERSION.jar & >/dev/null'                
+                            sh "sleep 20"
+                            sh "nohup java -jar DevOpsUsach2020-${VERSION}.jar & >/dev/null" 
+                            sh "sleep 20"               
                     }
                 }
                 stage("CD 4: Testear Artefacto - Dormir(Esperar 20sg) "){
                     env.STAGE='CD 4: Testear Artefacto - Dormir(Esperar 20sg) '
                     node {
-                            sh "sleep 20 && curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"                
+                            sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"                
                     }
                 }
                 stage("CD 5: Detener Atefacto jar en Jenkins server"){
