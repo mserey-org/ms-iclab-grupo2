@@ -19,15 +19,6 @@ withEnv(['channel=C04B17VE0JH']) {
                     sh "./mvnw clean compile -e"
                 }
             }
-<<<<<<< HEAD
-        }
-        stage("Paso 2: Testear Codigo"){
-            steps {
-                script {
-                sh "echo 'Test Code!'"
-                // Run Maven on a Unix agent.
-                sh "./mvnw clean test -e"
-=======
             stage("CI 2: Testear"){
                 env.STAGE='CI 2: Testear'
                 node {
@@ -36,7 +27,6 @@ withEnv(['channel=C04B17VE0JH']) {
                         // Run Maven on a Unix agent.
                         sh "./mvnw clean test -e"
                     }
->>>>>>> feature/integracion
                 }
             }
             stage("CI 3: Build .Jar"){
