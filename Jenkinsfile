@@ -25,6 +25,7 @@ withEnv(['channel=C04B17VE0JH']) {
                 node {
                     sh "echo 'Compile Code!'"
                     sh "./mvnw clean compile -e"
+                    
                 }
             }
             stage("CI 2: Testear"){
@@ -43,7 +44,14 @@ withEnv(['channel=C04B17VE0JH']) {
                     script {
                         sh "echo 'Build .Jar!'"
                         // Run Maven on a Unix agent.
-                        sh "./mvnw  clean package -e"
+                        if(env.BRANCH_NAME =~ ".*release/.*")
+                        {
+                            sh "./mvnw  clean package -e versions:set -DnewVersion=${VERSION}"
+                        }else
+                        {
+                            sh "./mvnw  clean package -e"
+                        }
+                        
                     }            
                 }
             }
@@ -65,7 +73,7 @@ withEnv(['channel=C04B17VE0JH']) {
             stage("CD"){
                 env.STAGE='CD'
                 node {
-                    sh "echo 'Se inicia release $VERSION'"
+                    sh "echo 'Se inicia release $VERSION'"                   
                 }
             }  
             stage("CD 1: Subir Artefacto a Nexus"){
