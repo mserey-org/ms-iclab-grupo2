@@ -3,6 +3,7 @@ withEnv(['channel=C04B17VE0JH']) {
 
     def BRANCH = "${env.BRANCH_NAME.split("/")[1]}"
     def BRANCH_TYPE = "${env.BRANCH_NAME.split("/")[0]}"
+    def VERSION = "${env.BRANCH_NAME.split("/")[1]}"
 
     try{
 
@@ -58,7 +59,7 @@ withEnv(['channel=C04B17VE0JH']) {
 
 
         if (env.BRANCH_NAME =~ ".*release/.*") {
-            def VERSION = $BRANCH 
+             
 
             stage("CD"){
                 env.STAGE='CD'
