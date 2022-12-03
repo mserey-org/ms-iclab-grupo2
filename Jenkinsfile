@@ -1,6 +1,7 @@
 #!groovy​
 withEnv(['channel=C04B17VE0JH']) {
     stage("Inicio"){
+            env.STAGE='Inicio'
             node {
                 sh "echo 'Se inicia Pipeline'"
             }
@@ -12,12 +13,14 @@ withEnv(['channel=C04B17VE0JH']) {
     try{
 
             stage("CI 1: Compliar"){
+                env.STAGE='CI 1: Compliar'
                 node {
                     sh "echo 'Compile Code!'"
                     sh "./mvnw clean compile -e"
                 }
             }
             stage("CI 2: Testear"){
+                env.STAGE='CI 2: Testear'
                 node {
                     script {
                         sh "echo 'Test Code!'"
@@ -27,6 +30,7 @@ withEnv(['channel=C04B17VE0JH']) {
                 }
             }
             stage("CI 3: Build .Jar"){
+                env.STAGE='CI 3: Build .Jar'
                 node {
                     script {
                         sh "echo 'Build .Jar!'"
@@ -36,6 +40,7 @@ withEnv(['channel=C04B17VE0JH']) {
                 }
             }
             stage("CI 4: Análisis SonarQube"){
+                env.STAGE='CI 4: Análisis SonarQube'
                 node {
                     withSonarQubeEnv('sonarqube') {
                         sh "echo 'Calling sonar Service in another docker container!'"
@@ -50,11 +55,13 @@ withEnv(['channel=C04B17VE0JH']) {
             def VERSION = $BRANCH 
 
             stage("CD"){
+                env.STAGE='CD'
                 node {
                     sh "echo 'Se inicia release $VERSION'"
                 }
             }  
             stage("CD 1: Subir Artefacto a Nexus"){
+                    env.STAGE='CD 1: Subir Artefacto a Nexus'
                     node {
                         nexusPublisher nexusInstanceId: 'nexus',
                             nexusRepositoryId: 'repository_grupo2',
@@ -77,21 +84,25 @@ withEnv(['channel=C04B17VE0JH']) {
                     }
                 }
                 stage("CD 2: Descargar Nexus"){
+                    env.STAGE='CD 2: Descargar Nexus'
                     node {
                             sh ' curl -X GET -u admin:$NEXUS_PASSWORD "http://nexus:8081/repository/repository_grupo2/com/devopsusach2020/DevOpsUsach2020/$VERSION/DevOpsUsach2020-$VERSION.jar" -O'
                     }
                 }
                 stage("CD 3: Levantar Artefacto Jar en server Jenkins"){
+                    env.STAGE='CD 3: Levantar Artefacto Jar en server Jenkins'
                     node {
                             sh 'nohup java -jar DevOpsUsach2020-$VERSION.jar & >/dev/null'                
                     }
                 }
                 stage("CD 4: Testear Artefacto - Dormir(Esperar 20sg) "){
+                    env.STAGE='CD 4: Testear Artefacto - Dormir(Esperar 20sg) '
                     node {
                             sh "sleep 20 && curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"                
                     }
                 }
                 stage("CD 5: Detener Atefacto jar en Jenkins server"){
+                    env.STAGE='CD 5: Detener Atefacto jar en Jenkins server'
                     node {
                         sh '''
                             echo 'Process Java .jar: ' $(pidof java | awk '{print $1}')  
@@ -106,7 +117,7 @@ withEnv(['channel=C04B17VE0JH']) {
 
         stage("Mensaje slack"){
             node {
-                slackSend (color: 'good', channel: "${env.channel}", message: "[grupo2] [${env.JOB_NAME}] [${BUILD_NUMBER}] Despliegue Exitoso [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'token-slack')
+                slackSend (color: 'good', channel: "${env.channel}", message: "[grupo2] [${env.JOB_NAME}] [${BUILD_NUMBER}] Ejecucion Exitosa [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'token-slack')
             }
         }        
             
