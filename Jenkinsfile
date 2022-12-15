@@ -22,11 +22,8 @@ pipeline {
                 }
             }
             post{
-				success{
-					slackSend color: 'good', channel: "${env.channel}", message: "[grupo2] [${BUILD_NUMBER}] Ejecucion Exitosa [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
-				}
 				failure{
-					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
+					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
 				}
         }            
         }
@@ -39,13 +36,10 @@ pipeline {
                 }
             }
             post{
-				success{
-					slackSend color: 'good', channel: "${env.channel}", message: "[grupo2] [${BUILD_NUMBER}] Ejecucion Exitosa [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
-				}
 				failure{
-					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
+					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
 				}
-        }
+        }    
         }
         stage("CI 3: Build release .Jar"){
             when { branch 'release/*'}
@@ -56,6 +50,11 @@ pipeline {
                     sh "./mvnw  clean package -e versions:set -DnewVersion=${VERSION}"
                 }
             }
+            post{
+				failure{
+					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
+				}
+        }                
         }   
         stage("CI 3: Build .Jar"){
             environment { STAGE="CI 3: Build .Jar" }
@@ -65,6 +64,11 @@ pipeline {
                     sh "./mvnw clean package -e"
                 }
             }
+            post{
+				failure{
+					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
+				}
+        }                
         }        
 
         stage("CI 4: Análisis SonarQube"){
@@ -78,6 +82,11 @@ pipeline {
                         
                 }
             }
+            post{
+				failure{
+					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
+				}
+        }                
         }
         stage("CD 1: Subir Artefacto a Nexus"){
             when { branch 'release/*'}
@@ -104,6 +113,11 @@ pipeline {
                         ]
                 }
             }
+            post{
+				failure{
+					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
+				}
+        }                
         }
         stage("CD 2: Descargar Nexus"){
             when { branch 'release/*'}
@@ -113,6 +127,11 @@ pipeline {
                     sh 'curl -X GET -u admin:$NEXUS_PASSWORD "http://nexus:8081/repository/repository_grupo2/com/devopsusach2020/DevOpsUsach2020/${VERSION}/DevOpsUsach2020-${VERSION}.jar" -O'
                 }
             }
+            post{
+				failure{
+					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
+				}
+        }                
         }
         stage("CD 3: Levantar Artefacto Jar en server Jenkins"){
             when { branch 'release/*'}
@@ -122,6 +141,11 @@ pipeline {
                 sh "nohup java -jar DevOpsUsach2020-${VERSION}.jar & >/dev/null" 
                 }
             }
+            post{
+				failure{
+					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
+				}
+        }                
         }
         stage("CD 4: Testear Artefacto - Dormir(Esperar 20sg)"){
             when { branch 'release/*'}
@@ -131,6 +155,11 @@ pipeline {
                     sh "sleep 20 && curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
                 }
             }
+            post{
+				failure{
+					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
+				}
+        }                
         }
         stage("CD 5: Detener Atefacto jar en Jenkins server"){
             when { branch 'release/*'}
@@ -143,7 +172,12 @@ pipeline {
                         kill -9 $(pidof java | awk '{print $1}')
                     '''
                 }
-            }
+            }        
         }
+    post{
+				success{
+					slackSend color: 'good', channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion Exitosa", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
+				}
+        }          
     }
 }
