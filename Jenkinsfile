@@ -62,7 +62,7 @@ pipeline {
             steps {
                 script{
                     sh "echo 'Building jar'"
-                    sh "./mvnw  clean package -e"
+                    sh "./mvnw clean package -e"
                 }
             }
         }        
@@ -85,7 +85,7 @@ pipeline {
             steps {
                 script{
                     nexusPublisher nexusInstanceId: 'nexus',
-                        nexusRepositoryId: 'maven-usach-ceres',
+                        nexusRepositoryId: 'repository_grupo2',
                         packages: [
                             [$class: 'MavenPackage',
                                 mavenAssetList: [
@@ -119,7 +119,7 @@ pipeline {
             environment { STAGE="CD 3: Levantar Artefacto Jar en server Jenkins" }            
             steps {
                 script{
-                sh "sleep 20 && nohup java -jar DevOpsUsach2020-${VERSION}.jar && sleep 20" 
+                sh "nohup java -jar DevOpsUsach2020-0.0.1.jar & >/dev/null" 
                 }
             }
         }
