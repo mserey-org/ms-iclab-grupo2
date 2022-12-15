@@ -8,17 +8,14 @@ pipeline {
     agent any
     environment {
         channel='C04B17VE0JH'
-        NEXUS_PASSWORD     = credentials('nexus-password')
+        NEXUS_PASSWORD = credentials('nexus-password')
         BRANCH = "${env.BRANCH_NAME.split("/")[1]}"
-        BRANCH_TYPE = "${env.BRANCH_NAME.split("/")[0]}"
         VERSION = "${env.BRANCH_NAME.split("/")[1]}"        
     }
     stages {    
         stage("Inicio"){
+        environment { STAGE='Inicio'}
             steps {
-              environment {
-                 STAGE='Inicio'
-                }
                 script{
                     checkout(
                             [$class: 'GitSCM',
@@ -38,10 +35,7 @@ pipeline {
         }
     }
         stage("CI 1: Compilar"){
-            when { anyOf { branch "feature/*"; branch "$REQUEST_BRANCHES"; branch "$STAGING_BRANCHES"; changeRequest target: 'master'; branch "qa/*"}}
-            environment {
-                STAGE='CI 1: Compilar'
-            }
+        environment { STAGE='CI 1: Compilar' }
             steps {
                 script{
                     sh "echo 'Compile Code!!'"
@@ -58,10 +52,7 @@ pipeline {
         }            
         }
         stage("CI 2: Testear"){
-            when { anyOf { branch "feature/*"; branch "$REQUEST_BRANCHES"; branch "$STAGING_BRANCHES"; changeRequest target: 'master'; branch "qa/*"}}
-            environment {
-                STAGE='CI 2: Testear'
-            }
+            environment { STAGE='CI 2: Testear'}
             steps {
                 script{
                     sh "echo 'Test Code!'"
@@ -78,7 +69,7 @@ pipeline {
         }
         }
         stage("CI 3: Build release .Jar"){
-            when { only { branch "release/*"}}
+            when { { branch "release/*"}}
             environment { STAGE="CI 3: Build .Jar" }
             steps {
                 script{
@@ -120,7 +111,7 @@ pipeline {
         }                
 
         stage("CD 1: Subir Artefacto a Nexus"){
-            when { only { branch "release/*"}}
+            when { { branch "release/*"}}
             environment { STAGE="CD 1: Subir Artefacto a Nexus" }
             steps {
                 script{
@@ -146,7 +137,7 @@ pipeline {
             }
         }
         stage("CD 2: Descargar Nexus"){
-            when { only { branch "release/*"}}
+            when { { branch "release/*"}}
             environment { STAGE="CD 2: Descargar Nexus" }            
             steps {
                 script{
@@ -155,7 +146,7 @@ pipeline {
             }
         }
         stage("CD 3: Levantar Artefacto Jar en server Jenkins"){
-            when { only { branch "release/*"}}
+            when { { branch "release/*"}}
             environment { STAGE="CD 3: Levantar Artefacto Jar en server Jenkins" }            
             steps {
                 script{
@@ -166,7 +157,7 @@ pipeline {
             }
         }
         stage("CD 4: Testear Artefacto - Dormir(Esperar 20sg)"){
-            when { only { branch "release/*"}}
+            when { { branch "release/*"}}
             environment { STAGE="CD 4: Testear Artefacto - Dormir(Esperar 20sg)" }            
             steps {
                 script{
@@ -175,7 +166,7 @@ pipeline {
             }
         }
         stage("CD 5: Detener Atefacto jar en Jenkins server"){
-            when { only { branch "release/*"}}
+            when { { branch "release/*"}}
             environment { STAGE="CD 5: Detener Atefacto jar en Jenkins server" }            
             steps {
                 script{
