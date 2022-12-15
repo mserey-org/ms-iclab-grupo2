@@ -57,6 +57,7 @@ pipeline {
         }                
         }   
         stage("CI 3: Build .Jar"){
+            when { branch != 'release/*'; branch != 'main'; }
             environment { STAGE="CI 3: Build .Jar" }
             steps {
                 script{
