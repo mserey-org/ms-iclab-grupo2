@@ -172,12 +172,15 @@ pipeline {
                         kill -9 $(pidof java | awk '{print $1}')
                     '''
                 }
-            }        
-        }
-    post{
+                }
+            post{
+				failure{
+					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
+				}
 				success{
 					slackSend color: 'good', channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion Exitosa", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
 				}
-        }          
+                }
+        } 
     }
 }
