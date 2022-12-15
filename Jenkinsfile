@@ -82,7 +82,7 @@ pipeline {
             environment { STAGE="CI 3: Build .Jar" }
             steps {
                 script{
-                    sh "echo 'Building jar"
+                    sh "echo 'Building jar'"
                     sh "./mvnw  clean package -e"
                 }
             }
