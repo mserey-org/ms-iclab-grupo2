@@ -57,7 +57,7 @@ pipeline {
         }                
         }   
         stage("CI 3: Build .Jar"){
-            when { not {branch 'release/*';branch 'main'} }
+            when { not { anyOf {branch 'release/*';branch 'main'}} }
             environment { STAGE="CI 3: Build .Jar" }
             steps {
                 script{
