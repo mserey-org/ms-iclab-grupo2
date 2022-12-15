@@ -150,8 +150,7 @@ pipeline {
             environment { STAGE="CD 3: Levantar Artefacto Jar en server Jenkins" }            
             steps {
                 script{
-                sh "sleep 20"
-                sh "nohup java -jar DevOpsUsach2020-${VERSION}.jar & >/dev/null" 
+                sh "nohup java -jar DevOpsUsach2020-${VERSION}.jar" 
                 sh "sleep 20"  
                 }
             }
