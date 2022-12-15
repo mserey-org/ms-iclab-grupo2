@@ -13,27 +13,6 @@ pipeline {
         VERSION = "${env.BRANCH_NAME.split("/")[1]}"        
     }
     stages {    
-        stage("Inicio"){
-        environment { STAGE='Inicio'}
-            steps {
-                script{
-                    checkout(
-                            [$class: 'GitSCM',
-                            //Acá reemplazar por el nonbre de branch
-                            branches: [[name: "$env.BRANCH_NAME" ]],
-                            //Acá reemplazar por su propio repositorio
-                            userRemoteConfigs: [[url: 'https://github.com/mserey-org/ms-iclab-grupo2.git']]])
-                }
-            }
-            post{
-				success{
-					slackSend color: 'good', channel: "${env.channel}", message: "[grupo2] [${BUILD_NUMBER}] Ejecucion Exitosa [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
-				}
-				failure{
-					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
-				}
-        }
-    }
         stage("CI 1: Compilar"){
         environment { STAGE='CI 1: Compilar' }
             steps {
@@ -100,16 +79,6 @@ pipeline {
                 }
             }
         }
-
-        stage("CD"){
-        environment { STAGE="CD" }
-        steps {
-            script{
-                    sh "echo 'Se inicia release $VERSION'"  
-                }
-            }
-        }                
-
         stage("CD 1: Subir Artefacto a Nexus"){
             when { branch 'release/*'}
             environment { STAGE="CD 1: Subir Artefacto a Nexus" }
@@ -150,8 +119,7 @@ pipeline {
             environment { STAGE="CD 3: Levantar Artefacto Jar en server Jenkins" }            
             steps {
                 script{
-                sh "nohup java -jar DevOpsUsach2020-${VERSION}.jar" 
-                sh "sleep 20"  
+                sh "sleep 20 && nohup java -jar DevOpsUsach2020-${VERSION}.jar && sleep 20" 
                 }
             }
         }
