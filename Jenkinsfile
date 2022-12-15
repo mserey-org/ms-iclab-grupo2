@@ -69,7 +69,7 @@ pipeline {
         }
         }
         stage("CI 3: Build release .Jar"){
-            when { { branch "release/*"}}
+            when { branch 'release/*'}
             environment { STAGE="CI 3: Build .Jar" }
             steps {
                 script{
@@ -111,7 +111,7 @@ pipeline {
         }                
 
         stage("CD 1: Subir Artefacto a Nexus"){
-            when { { branch "release/*"}}
+            when { branch 'release/*'}
             environment { STAGE="CD 1: Subir Artefacto a Nexus" }
             steps {
                 script{
@@ -137,7 +137,7 @@ pipeline {
             }
         }
         stage("CD 2: Descargar Nexus"){
-            when { { branch "release/*"}}
+            when { branch 'release/*'}
             environment { STAGE="CD 2: Descargar Nexus" }            
             steps {
                 script{
@@ -146,7 +146,7 @@ pipeline {
             }
         }
         stage("CD 3: Levantar Artefacto Jar en server Jenkins"){
-            when { { branch "release/*"}}
+            when { branch 'release/*'}
             environment { STAGE="CD 3: Levantar Artefacto Jar en server Jenkins" }            
             steps {
                 script{
@@ -157,7 +157,7 @@ pipeline {
             }
         }
         stage("CD 4: Testear Artefacto - Dormir(Esperar 20sg)"){
-            when { { branch "release/*"}}
+            when { branch 'release/*'}
             environment { STAGE="CD 4: Testear Artefacto - Dormir(Esperar 20sg)" }            
             steps {
                 script{
@@ -166,7 +166,7 @@ pipeline {
             }
         }
         stage("CD 5: Detener Atefacto jar en Jenkins server"){
-            when { { branch "release/*"}}
+            when { branch 'release/*'}
             environment { STAGE="CD 5: Detener Atefacto jar en Jenkins server" }            
             steps {
                 script{
