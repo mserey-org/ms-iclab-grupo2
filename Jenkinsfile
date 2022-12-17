@@ -176,7 +176,7 @@ pipeline {
 					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
 				}                
             }
-
+        }
         stage("CD 5: Detener Atefacto jar en Jenkins server"){
             when { branch 'release/*'}
             environment { STAGE="CD 5: Detener Atefacto jar en Jenkins server" }            
