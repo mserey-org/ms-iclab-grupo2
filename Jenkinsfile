@@ -162,6 +162,16 @@ pipeline {
 				}
         }                
         }
+
+        stage("CD 4.1: Testear Artefacto con newman"){
+            steps {
+                script{
+                    sh "echo 'Análisis con newman!'"
+                    sh 'newman run ejemplo-maven.postman_collection.json'
+                        }                        
+                }
+            }
+
         stage("CD 5: Detener Atefacto jar en Jenkins server"){
             when { branch 'release/*'}
             environment { STAGE="CD 5: Detener Atefacto jar en Jenkins server" }            
