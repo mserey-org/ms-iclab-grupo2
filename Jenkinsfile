@@ -164,6 +164,7 @@ pipeline {
         }
 
         stage("CD 4.1: Testear Artefacto con newman"){
+            when { branch 'release/*'}
             environment { STAGE="CD 4.1: Testear Artefacto con newman" }  
             steps {
                 script{
