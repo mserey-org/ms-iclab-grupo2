@@ -169,7 +169,7 @@ pipeline {
             steps {
                 script{
                     sh "echo 'Análisis con newman!'"
-                    sh 'newman run .postman_collection.json'
+                    sh 'newman run  postman_collection.json'
                 }                        
                 }
             post{
