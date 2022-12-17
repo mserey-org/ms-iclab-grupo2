@@ -164,12 +164,17 @@ pipeline {
         }
 
         stage("CD 4.1: Testear Artefacto con newman"){
+            environment { STAGE="CD 4.1: Testear Artefacto con newman" }  
             steps {
                 script{
                     sh "echo 'Análisis con newman!'"
-                    sh 'newman run ejemplo-maven.postman_collection.json'
-                        }                        
+                    sh 'newman run .postman_collection.json'
+                }                        
                 }
+            post{
+				failure{
+					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
+				}                
             }
 
         stage("CD 5: Detener Atefacto jar en Jenkins server"){
