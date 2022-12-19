@@ -163,7 +163,36 @@ pipeline {
         }                
         }
 
-        stage("CD 4.1: Testear Artefacto con newman"){
+        stage("CD 4.1: Testear estadoPais - Chile"){
+            when { branch 'release/*'}
+            environment { STAGE="CD 4.1: Testear estadoPais - Chile" }            
+            steps {
+                script{
+                    sh "sleep 20 && curl -X GET 'http://localhost:8081/rest/mscovid/estadoPais?pais=Chile'"
+                }
+            }
+            post{
+				failure{
+					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
+				}
+        }                
+        }
+        stage("CD 4.2: Testear estadoMundial"){
+            when { branch 'release/*'}
+            environment { STAGE="CD 4.2: Testear estadoMundial" }            
+            steps {
+                script{
+                    sh "sleep 20 && curl -X GET 'http://localhost:8081/rest/mscovid/estadoMundial'"
+                }
+            }
+            post{
+				failure{
+					slackSend color: 'danger',channel: "${env.channel}", message: "[grupo2] [Build ${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'slack-angelo-channel'
+				}
+        }                
+        }   
+
+        stage("CD 4.3: Testear Artefacto con newman"){
             when { branch 'release/*'}
             environment { STAGE="CD 4.1: Testear Artefacto con newman" }  
             steps {
