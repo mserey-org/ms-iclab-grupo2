@@ -120,7 +120,21 @@ withEnv(['channel=C04B17VE0JH','NEXUS_PASSWORD = credentials("nexus-password")']
                             sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"                
                     }
                 }
-                stage("CD 5: Detener Atefacto jar en Jenkins server"){
+                stage("CD 5: Test Postam Collection"){
+                    when { branch 'release/*'}
+                    env.STAGE='CD 5: Test Postam Collection'
+                    steps {
+                        script {
+                            sh "newman run ./ejemplo-maven-4pipe.postman_collection.json"
+                        }
+                    }            
+                    post{
+                        failure{
+                            slackSend (color: 'danger', channel: "${env.channel}", message: "[grupo2] [${env.JOB_NAME}] [${BUILD_NUMBER}] Ejecucion fallida en stage [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'token-slack')
+                        }
+                    }  
+                }                    
+                stage("CD 6: Detener Atefacto jar en Jenkins server"){
                     env.STAGE='CD 5: Detener Atefacto jar en Jenkins server'
                     node {
                         sh '''
@@ -129,17 +143,13 @@ withEnv(['channel=C04B17VE0JH','NEXUS_PASSWORD = credentials("nexus-password")']
                             kill -9 $(pidof java | awk '{print $1}')
                         '''
                     }
-                }
-                
+                }                
         }
-
-
         stage("Mensaje slack"){
             node {
                 slackSend (color: 'good', channel: "${env.channel}", message: "[grupo2] [${env.JOB_NAME}] [${BUILD_NUMBER}] Ejecucion Exitosa [${env.STAGE}]", teamDomain: 'devopsusach20-lzc3526', tokenCredentialId: 'token-slack')
             }
-        }        
-            
+        }                    
     }
 
     catch (e) {
@@ -150,3 +160,4 @@ withEnv(['channel=C04B17VE0JH','NEXUS_PASSWORD = credentials("nexus-password")']
 }
 
  
+
