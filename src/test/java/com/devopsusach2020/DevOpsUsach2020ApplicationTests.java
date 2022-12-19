@@ -49,7 +49,7 @@ class DevOpsUsach2020ApplicationTests {
 	@Test
 	void getEstadoPais() throws InterruptedException {
 		RestTemplate restTemplate = new RestTemplate();
-		String url = "http://localhost:" + port + "/rest/mscovid/estadoPais?pais=chile";
+		String url = "http://localhost:" + port + "/rest/mscovid/estadoPais?pais=ecuador";
 		try {
 			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 			LOGGER.info("response: " + response);
