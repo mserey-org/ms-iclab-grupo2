@@ -34,6 +34,19 @@ class DevOpsUsach2020ApplicationTests {
 	}
 	
 	@Test
+	void getEstadoMundial() throws InterruptedException {
+		RestTemplate restTemplate = new RestTemplate();
+		String url = "http://localhost:" + port + "/rest/mscovid/estadoMundial";
+		try {
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+			LOGGER.info("response: " + response);
+			Assertions.assertThat(response.getStatusCodeValue()).isEqualTo(200);
+		} catch (HttpClientErrorException e) {
+			Assertions.assertThat(e.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@Test
 	void getEstadoPais() throws InterruptedException {
 		RestTemplate restTemplate = new RestTemplate();
 		String url = "http://localhost:" + port + "/rest/mscovid/estadoPais?pais=ecuador";
